@@ -2,7 +2,7 @@
 
 网易云音乐 Android 客户端的 LSPosed 体验优化模块：去广告、精简界面、收敛弹窗、隐私加固。
 
-> 当前版本 **2.4.16**（versionCode 26）。适配网易云音乐 **9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22**（versionCode 9006008 / 9006013 / 9006015 / 9006020 / 9006022）。
+> 当前版本 **2.4.17**（versionCode 27）。适配网易云音乐 **9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22**（versionCode 9006008 / 9006013 / 9006015 / 9006020 / 9006022）。
 > 与网易官方无任何关联，仅供学习研究和个人设备使用。
 
 **主平台**：[CodeFloe](https://codefloe.com/quiet-tools/cloudmusictool) ｜ **项目主页**：[quiet-tools.codefloe.page](https://quiet-tools.codefloe.page/) ｜ **下载**：[Releases](https://codefloe.com/quiet-tools/cloudmusictool/releases) ｜ **通知**：[Telegram](https://t.me/yigenhuobah) ｜ **反馈**：[Issues](https://codefloe.com/quiet-tools/cloudmusictool/issues/new)
@@ -128,10 +128,10 @@ tab 切换用 hide/show 保留各自滚动位置；非设置 tab 按返回先回
 
 
 ```bash
-# 单元测试（含 ProfileExportTest，导出 app/build/profile9608.json、profile9613.json、profile9615.json 与 profile9620.json）
+# 单元测试（含 ProfileExportTest，导出 anchors.json profiles 中全部适配版本的 profile<versionName 去点>.json，如 9.6.22 → profile9622.json）
 ./gradlew :app:testDebugUnitTest
 
-# 挂载点体检（按 APK versionCode 自动选择 9608/9613/9615/9620 profile；
+# 挂载点体检（按 APK versionCode 在 anchors.json profiles 中自动选择对应 profile；
 # 输出 OK/GONE/ERROR，并校验 DexKitAnchors；--skip-anchors 可跳过锚点）
 bash tools/check-mounts.sh --apk /path/to/base.apk --dexsql /path/to/dexsql
 
@@ -156,7 +156,7 @@ bash tools/release.sh --host-apk /path/to/base.apk --dexsql /path/to/dexsql
 - `implementation io.github.libxposed:service:102.0.0`
 - `implementation org.luckypray:dexkit:2.3.0`（硬编码失败时兜底，已启用 legacy JNI 打包）
 - AppCompat / Material / androidx.preference
-- 单测：JUnit 4.13.2 + `org.json:json`；当前 **833 个用例**（`:app:testDebugUnitTest`）
+- 单测：JUnit 4.13.2 + `org.json:json`；当前 **887 个用例**（`:app:testDebugUnitTest`）
 
 ## 已知限制
 
