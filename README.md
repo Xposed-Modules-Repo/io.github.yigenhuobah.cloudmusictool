@@ -2,7 +2,7 @@
 
 网易云音乐 Android 客户端的 LSPosed 体验优化模块：去广告、精简界面、收敛弹窗、隐私加固。
 
-> 当前版本 **2.4.17**（versionCode 27）。适配网易云音乐 **9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22**（versionCode 9006008 / 9006013 / 9006015 / 9006020 / 9006022）。
+> 当前版本 **2.4.18**（versionCode 28）。适配网易云音乐 **9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22 / 9.6.30**（versionCode 9006008 / 9006013 / 9006015 / 9006020 / 9006022 / 9006030）。
 > 与网易官方无任何关联，仅供学习研究和个人设备使用。
 
 **主平台**：[CodeFloe](https://codefloe.com/quiet-tools/cloudmusictool) ｜ **项目主页**：[quiet-tools.codefloe.page](https://quiet-tools.codefloe.page/) ｜ **下载**：[Releases](https://codefloe.com/quiet-tools/cloudmusictool/releases) ｜ **通知**：[Telegram](https://t.me/yigenhuobah) ｜ **反馈**：[Issues](https://codefloe.com/quiet-tools/cloudmusictool/issues/new)
@@ -16,7 +16,7 @@
 
 | 项 | 值 |
 |---|---|
-| 目标应用 | `com.netease.cloudmusic` **9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22** (versionCode 9006008 / 9006013 / 9006015 / 9006020 / 9006022) |
+| 目标应用 | `com.netease.cloudmusic` **9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22 / 9.6.30** (versionCode 9006008 / 9006013 / 9006015 / 9006020 / 9006022 / 9006030) |
 | 模块包名 | `io.github.yigenhuobah.cloudmusictool` |
 | Xposed API | libxposed API 102（`minApiVersion=102` / `targetApiVersion=102`） |
 | 系统要求 | Android 10+（minSdk 29） |
@@ -156,13 +156,14 @@ bash tools/release.sh --host-apk /path/to/base.apk --dexsql /path/to/dexsql
 - `implementation io.github.libxposed:service:102.0.0`
 - `implementation org.luckypray:dexkit:2.3.0`（硬编码失败时兜底，已启用 legacy JNI 打包）
 - AppCompat / Material / androidx.preference
-- 单测：JUnit 4.13.2 + `org.json:json`；当前 **887 个用例**（`:app:testDebugUnitTest`）
+- 单测：JUnit 4.13.2 + `org.json:json`；当前 **891 个用例**（`:app:testDebugUnitTest`）
 
 ## 已知限制
 
 - **安装包签名校验**：启动时核对 APK 签名证书与内置指纹；签名不符会首次启动警告一次（不阻断功能）。该校验只能提示二次打包，恶意修改仍可移除，请优先从 CodeFloe Releases / Telegram 频道下载。
-- **适配版本：9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22**。其他版本默认 best-effort 继续挂载（与 QuietBox 语义一致），功能可能失效，状态卡/横幅会提示未适配。
+- **适配版本：9.6.08 / 9.6.13 / 9.6.15 / 9.6.20 / 9.6.22 / 9.6.30**。其他版本默认 best-effort 继续挂载（与 QuietBox 语义一致），功能可能失效，状态卡/横幅会提示未适配。
 - **9.6.22 适配状态**：2026-11-14 对 9.6.22 base.apk 完成全量静态体检，143/143 挂载点 OK、17/17 DexKit 锚点 OK、0 GONE；坐标与 9.6.20 完全一致，因此 anchors.json 的 9.6.22 profile 以 9.6.20 为 base 且无覆盖，运行时由唯一锚点表派生，未做真机逐功能回归。
+- **9.6.30 适配状态**：2026-11-23 对 9.6.30 base.apk 完成全量静态体检，140/140 挂载点 OK、22/22 DexKit 锚点 OK、0 GONE（APK sha256 `e1a72910…`）。共 30 条坐标覆盖：UI-04 `dr.h` → `nq.h#M0`、`Tc/Lc/hc` → `Nc/Fc/bc`；UI-05 `T8/U8` → `R8/Q8`、`th0.h` → `bg0.h`、`rh0.c` → `zf0.c`；UI-08 `tt0.d` → `gs0.d`、`vt0.r` → `is0.r`、`lv0.j` → `yt0.j`、`V8` → `S8`；UI-01 `appupdate.d` → `appupdate.e`、`fw0.e#q` → `su0.g#x`；PV-06 `utils.h2` → `utils.s2`；UI-07 `nr2.c` → `ao2.c`；UI-14 `oc` → `ic`；EN-01 `pc2.*` → `fc2.*`、`utils.sg` → `utils.bh`；AD-01 `E` → `G`、`q60.w0` → `r40.x0`；AD-07 `y1` → `x1`；AD-09 `z` → `B`。AD-08 的 playerjar / musicgift 三个挂载点已从宿主移除，由 profile.remove 删除，剩余 `AdPlayerFullScreenHelper` 提升为 critical。2026-11-24 真机复验：开启 UI-04（保留清单={推荐}）后顶部只剩「推荐」，5 个 UI-04 挂载点全部命中（7→1），`criticalFailed=0`。
 - **9.6.20 适配状态**：2026-11-05 对 9.6.20 base.apk 完成 143/143 挂载点静态体检（16/16 DexKit 锚点），未做真机逐功能回归。PV-05 的 d/e 已合并到 c()Z 并通过 profile.remove 删除；PV-01 从 o(String) 迁到 m(String) 上传入口，属语义迁移需真机验证；其余 9.6.15 坐标复用 base。
 - 广告由服务端下发，模块只能阻止展示/上报，不能阻止接口请求。
 - 宿主存在 Tinker 风格热补丁，补丁可能替换被 hook 的实现。
